@@ -11,21 +11,21 @@ using Microsoft.Azure.Cosmos.Table;
 
 namespace Rasputin.TM
 {
-    public static class GetUser
+    public static class GetSlot
     {
-        [FunctionName("GetUser")]
+        [FunctionName("GetSlot")]
         public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
-                                                    [Table("tblUsers")] CloudTable tblUser,
+                                                    [Table("tblSlots")] CloudTable tblSlot,
                                                     ILogger log)
         {
-            log.LogInformation("GetUser called");
+            log.LogInformation("GetSlot called");
 
-            Guid userID = Guid.Parse(req.Query["userID"].ToString());            
-            User user = await new UserService().FindUser(log, tblUser, userID);
-            if (user == null) {
+            Guid SlotID = Guid.Parse(req.Query["SlotID"].ToString());            
+            Slot Slot = await new SlotService().FindSlot(log, tblSlot, SlotID);
+            if (Slot == null) {
                 return new NotFoundResult();
             }
-            string responseMessage = JsonConvert.SerializeObject(user);
+            string responseMessage = JsonConvert.SerializeObject(Slot);
 
             return new OkObjectResult(responseMessage);
         }

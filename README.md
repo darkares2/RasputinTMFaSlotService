@@ -1,8 +1,8 @@
-# RasputinTMFaUserService
+# RasputinTMFaSlotService
 
-This service handles user related requests.
+This service handles Slot related requests.
 
 ## Api
 
-- api/CreateUser  (POST) { name, password, type } - Create user
-- api/GetUser?userID=id (GET) - Get by user id
+- api/CreateSlot  (POST) { name, password, type } - Create Slot
+- api/GetSlot?SlotID=id (GET) - Get by Slot id
