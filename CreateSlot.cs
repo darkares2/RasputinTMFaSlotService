@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Microsoft.Azure.Cosmos.Table;
+using System.Linq;
 
 namespace Rasputin.TM
 {
@@ -21,12 +22,9 @@ namespace Rasputin.TM
             log.LogInformation("CreateSlot called");
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
-            DateTime timeslot = data?.timeslot;
-            Guid userID = data?.userID;
-            Guid[] serviceIDs = data?.serviceIDs;
-
-            Slot Slot = await new SlotService().InsertSlot(log, tblSlot, timeslot, userID, serviceIDs);
+            CreateSlotRequest data = (CreateSlotRequest)JsonConvert.DeserializeObject(requestBody, typeof(CreateSlotRequest));
+            
+            Slot Slot = await new SlotService().InsertSlot(log, tblSlot, data.Timeslot, data.UserID, data.ServiceIDs);
 
             string responseMessage = JsonConvert.SerializeObject(Slot);
             return new OkObjectResult(responseMessage);

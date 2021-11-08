@@ -9,6 +9,7 @@ namespace Rasputin.TM{
         {
             this.PartitionKey = "p1";
             this.RowKey = Guid.NewGuid().ToString();
+            this.Timeslot = timeslot;
             this.UserID = userID;
             this.ServiceIDs = serviceIDs == null ? "" : string.Join(",", serviceIDs.Select(x => x.ToString())); 
         }
