@@ -13,7 +13,7 @@ namespace Rasputin.TM{
             this.UserID = userID;
             this.ServiceIDs = serviceIDs == null ? "" : string.Join(",", serviceIDs.Select(x => x.ToString())); 
         }
-        Slot() { }
+        public Slot() { }
         public DateTime? Timeslot { get; set; }
         public string UserID { get; set; }
         public string ServiceIDs { get; set; }

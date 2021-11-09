@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Azure.Cosmos.Table;
 using Microsoft.Extensions.Logging;
@@ -23,6 +24,25 @@ namespace Rasputin.TM {
                 return (Slot)await tblSlot.ExecuteAsync(operation);
             } catch(Exception ex) {
                 log.LogWarning(ex, "FindSlot", slotID);
+                return null;
+            }
+        }
+
+        public async Task<Slot[]> FindUserSlots(ILogger log, CloudTable tblSlot, Guid userID)
+        {
+            log.LogInformation($"All");
+            List<Slot> result = new List<Slot>();
+            TableQuery<Slot> query = new TableQuery<Slot>().Where(TableQuery.GenerateFilterCondition("UserID", QueryComparisons.Equal, userID.ToString()));
+            TableContinuationToken continuationToken = null;
+            try {
+                do {
+                var page = await tblSlot.ExecuteQuerySegmentedAsync(query, continuationToken);
+                continuationToken = page.ContinuationToken;
+                result.AddRange(page.Results);
+                } while(continuationToken != null);
+                return result.ToArray();
+            } catch(Exception ex) {
+                log.LogWarning(ex, "All");
                 return null;
             }
         }
