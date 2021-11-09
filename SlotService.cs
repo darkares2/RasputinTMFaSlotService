@@ -30,9 +30,28 @@ namespace Rasputin.TM {
 
         public async Task<Slot[]> FindUserSlots(ILogger log, CloudTable tblSlot, Guid userID)
         {
-            log.LogInformation($"All");
+            log.LogInformation($"FindUserSlots");
             List<Slot> result = new List<Slot>();
             TableQuery<Slot> query = new TableQuery<Slot>().Where(TableQuery.GenerateFilterCondition("UserID", QueryComparisons.Equal, userID.ToString()));
+            TableContinuationToken continuationToken = null;
+            try {
+                do {
+                var page = await tblSlot.ExecuteQuerySegmentedAsync(query, continuationToken);
+                continuationToken = page.ContinuationToken;
+                result.AddRange(page.Results);
+                } while(continuationToken != null);
+                return result.ToArray();
+            } catch(Exception ex) {
+                log.LogWarning(ex, "All");
+                return null;
+            }
+        }
+
+        public async Task<Slot[]> FindAll(ILogger log, CloudTable tblSlot)
+        {
+            log.LogInformation($"FindAll");
+            List<Slot> result = new List<Slot>();
+            TableQuery<Slot> query = new TableQuery<Slot>();
             TableContinuationToken continuationToken = null;
             try {
                 do {

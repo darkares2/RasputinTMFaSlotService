@@ -26,12 +26,18 @@ namespace Rasputin.TM
                 Slot[] slots = await new SlotService().FindUserSlots(log, tblSlot, Guid.Parse(UserIDString));
                 responseMessage = JsonConvert.SerializeObject(slots);                
             } else {
-                Guid SlotID = Guid.Parse(req.Query["SlotID"].ToString());            
-                Slot slot = await new SlotService().FindSlot(log, tblSlot, SlotID);
-                if (slot == null) {
-                    return new NotFoundResult();
+                string slotIDString = req.Query["SlotID"].ToString();
+                if (slotIDString != null && !slotIDString.Equals("")) {
+                    Guid SlotID = Guid.Parse(slotIDString);            
+                    Slot slot = await new SlotService().FindSlot(log, tblSlot, SlotID);
+                    if (slot == null) {
+                        return new NotFoundResult();
+                    }
+                    responseMessage = JsonConvert.SerializeObject(slot);
+                } else {
+                    Slot[] slots = await new SlotService().FindAll(log, tblSlot);
+                    responseMessage = JsonConvert.SerializeObject(slots);                
                 }
-                responseMessage = JsonConvert.SerializeObject(slot);
             }
 
             return new OkObjectResult(responseMessage);
