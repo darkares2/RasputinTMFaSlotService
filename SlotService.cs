@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.Cosmos.Table;
 using Microsoft.Extensions.Logging;
@@ -40,7 +41,7 @@ namespace Rasputin.TM {
                 continuationToken = page.ContinuationToken;
                 result.AddRange(page.Results);
                 } while(continuationToken != null);
-                return result.ToArray();
+                return result.Where(x => x.Timeslot > DateTime.Now).ToArray();
             } catch(Exception ex) {
                 log.LogWarning(ex, "All");
                 return null;
@@ -59,7 +60,7 @@ namespace Rasputin.TM {
                 continuationToken = page.ContinuationToken;
                 result.AddRange(page.Results);
                 } while(continuationToken != null);
-                return result.ToArray();
+                return result.Where(x => x.Timeslot > DateTime.Now).ToArray();
             } catch(Exception ex) {
                 log.LogWarning(ex, "All");
                 return null;
