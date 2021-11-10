@@ -41,7 +41,7 @@ namespace Rasputin.TM {
                 continuationToken = page.ContinuationToken;
                 result.AddRange(page.Results);
                 } while(continuationToken != null);
-                return result.Where(x => x.Timeslot > DateTime.Now).ToArray();
+                return result.Where(x => x.Timeslot > DateTime.UtcNow).ToArray();
             } catch(Exception ex) {
                 log.LogWarning(ex, "All");
                 return null;
@@ -60,7 +60,7 @@ namespace Rasputin.TM {
                 continuationToken = page.ContinuationToken;
                 result.AddRange(page.Results);
                 } while(continuationToken != null);
-                return result.Where(x => x.Timeslot > DateTime.Now).ToArray();
+                return result.Where(x => x.Timeslot > DateTime.UtcNow).ToArray();
             } catch(Exception ex) {
                 log.LogWarning(ex, "All");
                 return null;
